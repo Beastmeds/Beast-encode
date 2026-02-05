@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Encoder/Decoder</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px;
+    }
+
+    textarea {
+      width: 300px;
+      height: 100px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #output {
+      margin-top: 20px;
+      width: 300px;
+      min-height: 50px;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+    }
+
+    /* ===== UPDATE POPUP ===== */
+    #updatePopup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+    }
+
+    #updatePopup .box {
+      background: white;
+      padding: 20px;
+      width: 320px;
+      border-radius: 10px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Text Encoder / Decoder</h2>
+
+  <textarea id="input" placeholder="Text hier eingeben..."></textarea><br>
+
+  <button onclick="encodeText()">Encode</button>
+  <button onclick="decodeText()">Decode</button>
+
+  <div id="output"></div>
+
+  <!-- UPDATE POPUP -->
+  <div id="updatePopup">
+    <div class="box">
+      <h3>🆕 Neues Update</h3>
+      <p>Neue Encoder-Regeln wurden hinzugefügt.</p>
+      <button onclick="closeUpdatePopup()">Akzeptieren</button>
+    </div>
+  </div>
+
+  <script>
+    /* ========= UPDATE SCHALTER ========= */
+    const UPDATE_POPUP_AKTIV = true; // 🔁 true = AN | false = AUS
+
+    // Encoder-Regeln
+    const encodeMap = {
+      'a': '0','b': 'y','c': '1','d': 'q','e': 'p','f': 'ö',
+      'g': '9','h': 'o','i': 'l','j': '8','k': 'i','l': 'k',
+      'm': 'm','n': '7','o': 'u','p': 'j','q': 'n','r': '6',
+      's': 'z','t': 'h','u': 'b','v': '5','w': 't','x': 'g',
+      'y': 'v','z': '4',
+      '1': 'r','2': 'f','3': 'c','4': '3','5': 'e',
+      '6': 'd','7': 'x','8': '2','9': 'w','0': 's'
+    };
+
+    // Decoder automatisch erstellen
+    const decodeMap = {};
+    for (let key in encodeMap) {
+      decodeMap[encodeMap[key]] = key;
+    }
+
+    function encodeText() {
+      const input = document.getElementById('input').value;
+      let output = '';
+      for (let char of input) {
+        output += encodeMap[char.toLowerCase()] || char;
+      }
+      document.getElementById('output').innerText = output;
+    }
+
+    function decodeText() {
+      const input = document.getElementById('input').value;
+      let output = '';
+      for (let char of input) {
+        output += decodeMap[char.toLowerCase()] || char;
+      }
+      document.getElementById('output').innerText = output;
+    }
+
+    /* ========= POPUP LOGIK ========= */
+    window.onload = function () {
+      if (UPDATE_POPUP_AKTIV) {
+        document.getElementById("updatePopup").style.display = "block";
+      }
+    };
+
+    function closeUpdatePopup() {
+      document.getElementById("updatePopup").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
